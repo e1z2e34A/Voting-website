@@ -15,10 +15,7 @@ app.use((req, res, next) => {
 const ADMIN_PASSWORD = "30A9ZQ2";
 
 // 🗄️ Connect to MongoDB (we fix this next step)
-mongoose
-  .connect(
-    "mongodb+srv://admin:A1s2d3.4@token-cluster.uzxnrzg.mongodb.net/tokenDB",
-  )
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("DB connected"))
   .catch((err) => console.log(err));
 
@@ -98,6 +95,8 @@ app.get("/", (req, res) => {
   res.send("✅ Token system backend is running successfully");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
