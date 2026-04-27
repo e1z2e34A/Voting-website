@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>2K26 PDSSA Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #020617, #0f172a);
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: gold;
+            margin-bottom: 20px;
+        }
+
+        .login-box {
+            max-width: 400px;
+            margin: auto;
+            background: #111827;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 10px;
+            background: #1f2937;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            background: #22c55e;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .panel {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .stats {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #38bdf8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111827;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #1f2937;
+        }
+
+        tr:nth-child(even) {
+            background: #1f2937;
+        }
+
+        canvas {
+            margin-top: 20px;
+            background: #111827;
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>2K26 PDSSA Admin Dashboard</h1>
+
+    <div class="login-box">
+        <input id="pass" type="password" placeholder="Enter Admin Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div class="panel" id="panel">
+        <div class="stats" id="tokens"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Selections</th>
+                </tr>
+            </thead>
+            <tbody id="table"></tbody>
+        </table>
+
+        <!-- <canvas id="myChart"></canvas> -->
+    </div>
+
+    <script>
+        const API = "http://localhost:3000";
+        let chart;
+
+        /* 🎨 EASY COLOR CONTROL */
+        const colorMap = [
+            { name: "Pen", color: "#fff" },
+            { name: "Book", color: "#3b82f6" },
+            { name: "Snack", color: "#f59e0b" }
+        ];
+
+        /* 🔐 LOGIN */
+        async function login() {
+            let pass = document.getElementById("pass").value;
+
+            let res = await fetch(API + "/admin-login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: pass })
+            });
+
+            let data = await res.json();
+
+            if (data.success) {
+                document.getElementById("panel").style.display = "block";
+                load();
+            } else {
+                alert("Wrong password");
+            }
+        }
+
+        /* 📊 LOAD DATA + CHART */
+        async function load() {
+            let res = await fetch(API + "/admin-data");
+            let data = await res.json();
+
+            document.getElementById("tokens").innerText =
+                "Tokens Used: " + data.tokensUsed;
+
+            let table = document.getElementById("table");
+            table.innerHTML = "";
+
+            let labels = [];
+            let values = [];
+
+            data.items.forEach(i => {
+                let row = `
+      <tr>
+        <td>${i.name}</td>
+        <td>${i.count}</td>
+      </tr>
+    `;
+                table.innerHTML += row;
+
+                labels.push(i.name);
+                values.push(i.count);
+            });
+
+            /* 🎨 SOLID COLORS ONLY */
+            let backgrounds = labels.map(label => {
+                let found = colorMap.find(c => c.name === label);
+                return found ? found.color : "#888888";
+            });
+
+            if (chart) chart.destroy();
+
+            let ctx = document.getElementById("myChart").getContext("2d");
+
+            chart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Item Selections",
+                        data: values,
+                        backgroundColor: backgrounds,
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: { color: "white" }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: "white" }
+                        },
+                        y: {
+                            ticks: { color: "white" }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

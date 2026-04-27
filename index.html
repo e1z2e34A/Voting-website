@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>2K26 PDSSA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #020617, #0f172a);
+            color: white;
+            padding: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            letter-spacing: 2px;
+            color: gold;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .card {
+            background: #111827;
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 1000px;
+            margin: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            background: #1f2937;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            background: #22c55e;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .points {
+            text-align: center;
+            margin: 15px 0;
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
+        .items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .item-card {
+            background: #1f2937;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            background: #374151;
+        }
+
+        .item-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .item-card h3,
+        h3 {
+            margin: 10px 0 5px;
+            font-weight: 500;
+        }
+
+        .item-card p {
+            font-weight: 700;
+        }
+
+        .selected {
+            border: 2px solid #22c55e;
+        }
+
+        .nks {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffc1bf;
+            font-weight: 14px;
+            font-weight: 400;
+        }
+
+        @media (min-width: 600px) {
+            .items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo">
+        <h1>2K26 PDSSA</h1>
+        <p>Voting System</p>
+    </div>
+
+    <div class="card">
+
+        <input id="token" placeholder="Enter your token">
+        <button onclick="redeem()">Redeem Token</button>
+        <button onclick="buyToken()">Buy Token</button>
+        <p class="message" id="msg"></p>
+
+        <div class="points" id="points">Points: 0</div>
+
+        <div class="items">
+
+            <div class="item-card" onclick="selectItem('Pen', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Book', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Snack', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Pen', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Book', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Snack', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Pen', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Book', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Snack', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Pen', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Book', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+            <div class="item-card" onclick="selectItem('Snack', this)">
+                <h3>Name</h3>
+                <p>Category:</p>
+            </div>
+
+
+            <button onclick="buy()" class="nks">Use Points</button>
+        </div>
+
+        <script>
+            function buyToken() {
+                const phoneNumber = "2348038444720";
+                const message = "HI I want to purchase token";
+
+                const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+                window.open(url, "_blank");
+            }
+
+            let points = 0;
+            let selectedItem = null;
+            const API = "http://localhost:3000";
+
+            function selectItem(item, el) {
+                selectedItem = item;
+
+                document.querySelectorAll(".item-card").forEach(c => c.classList.remove("selected"));
+                el.classList.add("selected");
+            }
+
+            async function redeem() {
+                let token = document.getElementById("token").value.trim();
+
+                let res = await fetch(API + "/redeem", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token })
+                });
+
+                let data = await res.json();
+                let msg = document.getElementById("msg");
+
+                if (data.success) {
+                    points += data.points;
+                    document.getElementById("points").innerText = "Points: " + points;
+                    msg.innerText = "Token accepted ✅";
+                } else {
+                    msg.innerText = data.msg;
+                }
+            }
+
+            async function buy() {
+                let msg = document.getElementById("msg");
+
+                if (!selectedItem) {
+                    msg.innerText = "Select an item";
+                    return;
+                }
+
+                if (points < 1) {
+                    msg.innerText = "Not enough points";
+                    return;
+                }
+
+                await fetch(API + "/select", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ item: selectedItem })
+                });
+
+                points -= 1;
+                document.getElementById("points").innerText = "Points: " + points;
+
+                msg.innerText = "Item selected 🎉";
+            }
+        </script>
+
+</body>
+
+</html>
